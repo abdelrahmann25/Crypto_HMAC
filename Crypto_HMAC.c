@@ -44,7 +44,7 @@ static void compute_hmac_sha256(const uint8_t *message, size_t message_len, uint
 static void prepare_data(Crypto_HMAC_Context *ctx, const uint8_t *data, size_t data_len, uint8_t *output_buffer, size_t buffer_len) {
 #if USE_FRESHNESS_VALUE
     if (buffer_len < data_len + 1) {
-        fprintf(stderr, "Buffer length is too small\n");
+        //Error Handeling
         return;
     }
 
@@ -52,7 +52,7 @@ static void prepare_data(Crypto_HMAC_Context *ctx, const uint8_t *data, size_t d
     output_buffer[data_len] = ctx->freshness_counter++;
 #else
     if (buffer_len < data_len) {
-        fprintf(stderr, "Buffer length is too small\n");
+        //Error Handeling
         return;
     }
 
@@ -70,7 +70,7 @@ static int check_freshness_value(Crypto_HMAC_Context *ctx, uint8_t received_fres
 // Extract data and truncated HMAC from the received buffer
 static int extract_data_and_hmac(Crypto_HMAC_Context *ctx, const uint8_t *buffer, size_t buffer_len, uint8_t *data, size_t data_len, uint8_t *truncated_hmac, size_t truncated_hmac_len) {
     if (buffer_len < data_len + truncated_hmac_len + (USE_FRESHNESS_VALUE ? 1 : 0)) {
-        fprintf(stderr, "Buffer length is too small\n");
+        //Error Handeling
         return 0;
     }
 
@@ -78,7 +78,7 @@ static int extract_data_and_hmac(Crypto_HMAC_Context *ctx, const uint8_t *buffer
 
 #if USE_FRESHNESS_VALUE
     if (buffer[data_len] != ctx->freshness_counter - 1) {
-        fprintf(stderr, "Freshness value mismatch\n");
+        //Error Handeling
         return 0;
     }
 #endif
@@ -105,7 +105,7 @@ void Crypto_HMAC_Calculate(Crypto_HMAC_Context *ctx, const uint8_t *input_data, 
 // Create a buffer to be sent with the truncated HMAC
 void Crypto_HMAC_CreateSendBuffer(Crypto_HMAC_Context *ctx, uint8_t *buffer, size_t buffer_len, const uint8_t *data, size_t data_len, const uint8_t *full_hmac, size_t truncated_hmac_len) {
     if (buffer_len < data_len + truncated_hmac_len + (USE_FRESHNESS_VALUE ? 1 : 0)) {
-        fprintf(stderr, "Buffer length is too small\n");
+        //Error Handeling
         return;
     }
 
@@ -148,7 +148,7 @@ int Crypto_HMAC_VerifyReceiveBuffer(Crypto_HMAC_Context *ctx, const uint8_t *rec
 // Extract the actual data from the receive buffer without freshness value
 void Crypto_HMAC_ExtractDataFromBuffer(Crypto_HMAC_Context *ctx, const uint8_t *receive_buffer, size_t buffer_len, uint8_t *extracted_data, size_t data_len) {
     if (buffer_len < data_len + (USE_FRESHNESS_VALUE ? 1 : 0)) {
-        fprintf(stderr, "Buffer length is too small\n");
+        //Error Handeling
         return;
     }
 
